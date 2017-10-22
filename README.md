@@ -1,2 +1,2 @@
 # microgram
-Instagram like system built with microservices
+Instagram like system built with microservices, for learning and testing purposes.

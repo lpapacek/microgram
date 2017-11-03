@@ -5,12 +5,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 require('rootpath')();
-var config = require('config/db.def')();
-var Logger = require('helpers/logger');
-var sequelizeStarter = require('core/db/sequelizeStarter');
+const config = require('config/db.def')();
+const Logger = require('helpers/logger');
+const sequelizeStarter = require('core/db/dbManager');
+const responseHandler = require('core/middleware/responseHandler');
+const errorHandler = require('core/middleware/errorHandler');
 
-var users = require('routes/users');
-var index = require('routes/index');
+const users = require('routes/users');
+const index = require('routes/index');
 
 var app = express();
 
@@ -26,31 +28,19 @@ log.info('Starting UserService...');
 
 sequelizeStarter.init()
 .then(() => {
-	// 
+	initRouteChain();
 })
 .catch((err) => {
 	console.log(err);
 })
 
-app.use('/', index);
-app.use('/users', users);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.send();
-});
+const initRouteChain = () => {
+  app.use('/', index);
+  app.use('/users', users);
+  
+  app.use(responseHandler.handleResponse);
+  app.use(errorHandler.handleNotFoundError);
+  app.use(errorHandler.handleError);
+}
 
 module.exports = app;

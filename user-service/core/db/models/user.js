@@ -24,6 +24,14 @@ module.exports = (sequelize) => {
 			type: Sequelize.STRING,
 			field: 'last_name',
 		},
+		status: {
+			type: Sequelize.INTEGER,
+			field: 'status',
+		},
+		deleted: {
+			type: Sequelize.BOOLEAN,
+			field: 'deleted',
+		},
 		created_at: {
 			type: Sequelize.DATE,
 			field: 'created_at',

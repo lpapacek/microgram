@@ -30,7 +30,10 @@ describe('Users', () => {
 				.get('/')
 				.end((err, res) => {
 					expect(res).to.have.status(200)
-					expect(res.body).to.be.a('array')
+					expect(res.body).to.be.an('object')
+					expect(res.body).to.have.all.keys([ 'error', 'result' ]);
+					expect(res.body.error).to.be.null;
+					expect(res.body.result).to.be.an('array');
 					done()	
 				})
 		})

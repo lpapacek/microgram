@@ -50,22 +50,21 @@ const init = async () => {
     entities[model.name] = model;
   })
 
+  // Define associations
   for (var modelName in entities) {
     if ('associate' in entities[modelName]) {
       entities[modelName].associate(entities);
     }
   }
 
-  sequelize.sync( { force: false } )
-  .then(function(syncResult) {
+  try {
+    let res = await sequelize.sync({ force: false });
     log.info('Sequelize init done!');
-    return 'OK';
-  })
-  .catch(function(err) {
-    log.error('Sequelize init error!');
+  } catch(err) {
     throw err;
-  })
+  }
 
+  return 'OK';
 }
 
-module.exports = Object.assign({}, { init });
+module.exports = Object.assign({}, { init, entities });

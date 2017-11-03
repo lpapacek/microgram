@@ -30,11 +30,7 @@ sequelizeStarter.init()
 })
 .catch((err) => {
 	console.log(err);
-} )
-
-
-
-console.log(sequelizeStarter);
+})
 
 app.use('/', index);
 app.use('/users', users);

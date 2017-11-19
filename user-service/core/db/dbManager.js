@@ -4,8 +4,7 @@ const path = require('path');
 
 require('rootpath')();
 const config = require('config/db.def')();
-const Logger = require('helpers/logger');
-let log = new Logger();
+const log = require('helpers/logger');
 
 let entities = {};
 

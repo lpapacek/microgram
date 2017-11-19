@@ -6,7 +6,7 @@ const STATUSES = {
   ACTIVE: 1
 }
 
-const findUsers = async () => {
+const findAll = async () => {
   var users = await dbm.entities.user.findAll({
     where: {
       deleted: 0,
@@ -16,7 +16,7 @@ const findUsers = async () => {
   return users;
 }
 
-const findUserById = async (id) => {
+const findById = async (id) => {
   var users = await dbm.entities.user.findAll({
     where: {
       deleted: 0,
@@ -27,7 +27,7 @@ const findUserById = async (id) => {
   return users;
 }
 
-const findUserByUsername = async (username) => {
+const findByUsername = async (username) => {
   var users = await dbm.entities.user.findAll({
     where: {
       deleted: 0,
@@ -38,4 +38,4 @@ const findUserByUsername = async (username) => {
   return users;
 }
 
-module.exports = { findUsers, findUserById, findUserByUsername };
+module.exports = { findAll, findById, findByUsername };

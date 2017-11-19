@@ -1,15 +1,17 @@
-var express = require('express');
-var helmet = require('helmet');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const request = require('request');
 
 require('rootpath')();
-const config = require('config/db.def')();
-const Logger = require('helpers/logger');
+const config = require('config/config.def')();
+const log = require('helpers/logger');
 const sequelizeStarter = require('core/db/dbManager');
 const responseHandler = require('core/middleware/responseHandler');
 const errorHandler = require('core/middleware/errorHandler');
+const registrator = require('core/utils/registrator');
 
 const users = require('routes/users');
 const index = require('routes/index');
@@ -22,17 +24,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(helmet());
 
-var log = new Logger();
-
 log.info('Starting UserService...');
 
 sequelizeStarter.init()
-.then(() => {
-	initRouteChain();
-})
-.catch((err) => {
-	console.log(err);
-})
+//Promise.resolve()
+  .then(() => {
+    // Register to API Gateway;
+    return registrator.register(app.get('address'));
+  })
+  .then(() => {
+    initRouteChain();
+    log.info('UserService UP! Listening on port ' + app.get('address').port);
+  })
+  .catch((err) => {
+    console.log(err);
+  })
 
 const initRouteChain = () => {
   app.use('/', index);

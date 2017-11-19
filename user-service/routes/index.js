@@ -8,4 +8,11 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/pulse', (req, res, next) => {
+  res.body = {
+    status: 'OK'
+  }
+  next();
+})
+
 module.exports = router;

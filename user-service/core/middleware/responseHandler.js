@@ -6,8 +6,8 @@ const handleResponse = (req, res, next) => {
     next();
     return;
   }
-
-  if (res.body.error !== null) {
+  console.log(res.body);
+  if (res.body.error || res.body.error != null) {
     let err = new Error('Internal error');
     err.status = 500;
     next(err);

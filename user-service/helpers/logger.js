@@ -1,4 +1,6 @@
-var winston = require('winston')
+'use strict'
+
+const winston = require('winston')
 
 const logger = new (winston.Logger)({
 	transports: [
@@ -21,24 +23,4 @@ const logger = new (winston.Logger)({
 	}
 })
 
-function Logger() {
-	//
-}
-
-Logger.prototype.info = function(message) {
-	logger.info(message)
-}
-
-Logger.prototype.warn = function(message) {
-	logger.warn(message)
-}
-
-Logger.prototype.error = function(message) {
-	logger.error(message)
-}
-
-Logger.prototype.debug = function(message) {
-	logger.debug(message)
-}
-
-module.exports = Logger
+module.exports = logger

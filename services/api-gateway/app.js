@@ -4,10 +4,9 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const log = require('./helpers/logger');
+const log = require('./core/helpers/logger');
 const responseHandler = require('./core/middleware/responseHandler');
 const errorHandler = require('./core/middleware/errorHandler');
-const serviceChecker = require('./core/registry/checker');
 const auth = require('./core/security/auth');
 const index = require('./routes/index');
 
@@ -24,17 +23,6 @@ app.use(auth.initialize());
 
 log.info('Starting API Gateway...');
 
-//sequelizeStarter.init()
-Promise.resolve()
-	.then(() => {
-		log.info('API Gateway running!');
-		initRouteChain();
-		serviceChecker.start();
-	})
-	.catch(err => {
-		console.log(err);
-	});
-
 const initRouteChain = () => {
 	app.use('/', index);
 
@@ -42,5 +30,9 @@ const initRouteChain = () => {
 	app.use(errorHandler.handleNotFoundError);
 	app.use(errorHandler.handleError);
 };
+
+log.info('API Gateway running!');
+initRouteChain();
+//serviceChecker.start();
 
 module.exports = app;

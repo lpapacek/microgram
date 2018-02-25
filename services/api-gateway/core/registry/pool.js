@@ -1,59 +1,62 @@
 'use strict';
-const uuidv4 = require('uuid/v4');
-const rr = require('rr');
 
-let services = {};
+const Consul = require('consul');
 
-const addInstance = instanceInfo => {
-	if (!services[instanceInfo.name]) {
-		services[instanceInfo.name] = [];
-	}
+const knownServices = ['users-service', 'image-service'];
 
-	services[instanceInfo.name].push({
-		id: uuidv4(),
-		version: instanceInfo.version,
-		endpoint: instanceInfo.endpoint,
-		host: instanceInfo.host === '::' ? 'localhost' : instanceInfo.host,
-		port: instanceInfo.port
+const connect = () => {
+	const consul = Consul({
+		host: '127.0.0.1',
+		port: 8500,
+		secure: false,
+		promisify: true
 	});
+	return consul;
 };
 
-const getInstance = name => {
-	if (!services[name] || services[name].length === 0) {
-		return null;
-	}
+const getInstance = async name => {
+	const instances = await getInstances(name);
+	if (instances.length === 0) return null;
 
-	return rr(services[name]);
+	// TODO better algorithm for load balancing!
+	return instances[Math.floor(Math.random() * instances.length)];
 };
 
-const getInstances = name => {
-	if (!services[name] || services[name].length === 0) {
-		return null;
-	}
+const getInstances = async name => {
+	const consul = connect();
+	const instances = await consul.health.service({ service: name, passing: true });
+	const instanceList = instances.map(instance => {
+		return {
+			id: instance.Service.ID,
+			address: instance.Service.Address,
+			port: instance.Service.Port
+		};
+	});
 
-	return services[name];
-};
-
-const listAll = () => {
-	let instanceList = [];
-	for (let serviceName in services) {
-		services[serviceName].forEach(instance => {
-			instance.serviceName = serviceName;
-			instanceList.push(instance);
-		});
-	}
 	return instanceList;
 };
 
-const removeInstance = id => {
-	for (let serviceName in services) {
-		for (let i = services[serviceName].length - 1; i >= 0; i--) {
-			if (services[serviceName][i].id === id) {
-				services[serviceName].splice(i, 1);
-				return;
-			}
-		}
-	}
+const listAll = async () => {
+	const consul = connect();
+
+	const services = knownServices.map(serviceName => {
+		return consul.health.service({ service: serviceName, passing: true });
+	});
+
+	const serviceList = await Promise.all(services);
+	const normalizedInstances = serviceList.map(service => {
+		const instances = service.map(instance => {
+			return {
+				id: instance.Service.ID,
+				address: instance.Service.Address,
+				port: instance.Service.Port
+			};
+		});
+		console.log(instances);
+		return instances;
+	});
+
+	return normalizedInstances;
 };
 
-module.exports = { addInstance, getInstance, getInstances, removeInstance, listAll };
+module.exports = { getInstance, getInstances, listAll };

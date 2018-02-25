@@ -2,8 +2,7 @@
 
 const cron = require('node-cron');
 
-require('rootpath')();
-const log = require('../../helpers/logger');
+const log = require('../../core/helpers/logger');
 const rest = require('../lib/restWrapper');
 const pool = require('../registry/pool');
 

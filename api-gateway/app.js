@@ -9,7 +9,7 @@ const log = require('helpers/logger');
 const responseHandler = require('core/middleware/responseHandler');
 const errorHandler = require('core/middleware/errorHandler');
 const serviceChecker = require('core/registry/checker');
-
+const auth = require('core/security/auth');
 const index = require('routes/index');
 
 var app = express();
@@ -20,6 +20,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(helmet());
 
+auth.setup();
+app.use(auth.initialize());
+
 log.info('Starting API Gateway...');
 
 //sequelizeStarter.init()
@@ -27,7 +30,7 @@ Promise.resolve()
 .then(() => {
   log.info('API Gateway running!');
   initRouteChain();
-  serviceChecker.start();
+ // serviceChecker.start();
 })
 .catch((err) => {
 	console.log(err);

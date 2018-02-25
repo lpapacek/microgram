@@ -24,4 +24,13 @@ const post = (async (url, params, config) => {
   return result.data;
 })
 
-module.exports = { get, post };
+const getBase = (service) => {
+  return 'http://' +
+    service.port +
+    ':' +
+    service.port +
+    '/' +
+    service.endpoint
+} 
+
+module.exports = { get, post, getBase };

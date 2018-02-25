@@ -1,20 +1,21 @@
-var dbSettings = {
-	hostname: 'localhost',
-	database: 'users_db',
-	user: 'root',
-	pass: 'root',
-	dialect: 'mysql',
-	debug: true,
+'use strict'
+
+var config = {
+	jwtSecret: "s3cr3t",
+	jwtSession: {
+		session: false
+	},
+	jwtExpirePeriod: 60,
 }
 
-var getConfig = () => {
+const getConfig = () => {
 	try {
-		var configMod = require('./db.mod');
-		dbSettings = Object.assign(dbSettings, configMod);
+		var configMod = require('./config.mod');
+		config = Object.assign(config, configMod);
 	} catch (ex) {
 		//
 	}
-	return dbSettings;
+	return config;
 }
 
-module.exports = getConfig;
+module.exports = { getConfig };

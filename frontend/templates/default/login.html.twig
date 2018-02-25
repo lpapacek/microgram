@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block body %}
+  <div class="row">
+		<div class="form-signin col-md-4 col-md-offset-4 login-box">
+			<h3 class="form-signin-heading">Welcome!</h3>
+			<p class="form-signin-heading">Please sign in.</p>
+			<div class="error-container">
+				{{ error }}
+			</div>
+			
+			{{ form(form) }}
+
+			<p>Not a member? <a href="{{ url('register') }}">Register</a>.</p>
+		</div>
+  </div>
+{% endblock %}

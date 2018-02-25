@@ -7,11 +7,20 @@ require('rootpath')();
 let pool = require('core/registry/pool');
 const Logger = require('helpers/logger');
 const rest = require('core/lib/restWrapper');
+const auth = require('core/security/auth');
+const Token = require('models/token');
 
-
-router.get('/', function (req, res, next) {
+router.get('/token', function (req, res, next) {
+  let token = auth.getToken({ id: 'lp' });
   res.body = {
-    result: [ {a: 'b'}, {c: 2}]
+    result: token
+  };
+  next();
+});
+
+router.get('/', auth.authenticate(), function (req, res, next) {
+  res.body = {
+    result: 'Hello from API Gateway!'
   };
   next();
 });
@@ -34,20 +43,32 @@ router.get('/system', function (req, res, next) {
 });
 
 router.post('/login', async function (req, res, next) {
-  let users = pool.getInstance('user-service');
-  if (! users) {
-    next(new Error('Service not found'));
+  let userService = pool.getInstance('user-service');
+  if (! userService) {
+    res.status(503).send('Service not available.');
+  //  return;
+  }
+
+  let user = null;
+  try { 
+    user = await rest.post(rest.getBase(userService)+'/login', req.body);
+  } catch(e) {
+    next(e);
     return;
   }
 
-  try { 
-    let loginRes = await rest.post(`http://${users.host}:${users.port}/${users.endpoint}/login`, req.body);
-    res.body = loginRes;
-    next();
-  } catch(e) {
-    next(e);
+  if (!user) {
+    // throw 401
   }
 
+  // Issue JWT token
+  let jwtObj = auth.getToken(user);
+  res.body = {
+    token: jwtObj.token,
+    refresh_token: jwtObj.refreshToken
+  }
+
+  next();
 });
 
 module.exports = router;

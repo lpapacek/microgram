@@ -25,19 +25,18 @@ const check = async () => {
 	}
 	status = STATUSES.busy;
 
-	log.info('Checking service hearthbeats...');
+	log.info('Sending pulse to services...');
 	let instances = pool.listAll();
+	if (instances.length === 0) {
+		log.info('No instances yet!');
+		status = STATUSES.free;
+		return;
+	}
+
 	for (let i in instances) {
 		let instance = instances[i];
 		log.info(
-			'Service: ' +
-				instance.serviceName +
-				' | Instance: ' +
-				instance.id +
-				' | Address: ' +
-				instance.host +
-				':' +
-				instance.port
+			`Service: ${instance.serviceName} | Instance: ${instance.id} | Address: ${instance.host}:${instance.port}`
 		);
 		try {
 			let pulse = await rest.get(`http://${instance.host}:${instance.port}/pulse`, { timeout: 1000 });

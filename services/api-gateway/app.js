@@ -29,7 +29,7 @@ Promise.resolve()
 	.then(() => {
 		log.info('API Gateway running!');
 		initRouteChain();
-		// serviceChecker.start();
+		serviceChecker.start();
 	})
 	.catch(err => {
 		console.log(err);

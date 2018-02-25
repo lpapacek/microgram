@@ -1,18 +1,26 @@
-'use strict'
+'use strict';
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+// Routers
+const userRouter = require('./users');
+
+router.use('/users', userRouter);
 
 router.get('/pulse', (req, res, next) => {
-  res.body = {
-    status: 'OK'
-  }
-  next();
-})
+	res.body = {
+		status: 'OK'
+	};
+	next();
+});
+
+router.get('/health', function(req, res) {
+	console.log('Running in: ' + process.env.NODE_ENV);
+	res.send({
+		status: 'OK',
+		timestamp: Date.now()
+	});
+});
 
 module.exports = router;

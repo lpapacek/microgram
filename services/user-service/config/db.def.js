@@ -1,11 +1,11 @@
 var dbSettings = {
 	hostname: 'localhost',
-	database: 'users_db',
+	database: 'users',
 	user: 'root',
-	pass: 'root',
+	pass: '',
 	dialect: 'mysql',
-	debug: true,
-}
+	debug: true
+};
 
 var getConfig = () => {
 	try {
@@ -15,6 +15,6 @@ var getConfig = () => {
 		//
 	}
 	return dbSettings;
-}
+};
 
 module.exports = getConfig;

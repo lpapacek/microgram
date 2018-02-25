@@ -3,7 +3,7 @@ var settings = {
 		address: '127.0.0.1',
 		port: 3000
 	}
-}
+};
 
 var getConfig = () => {
 	try {
@@ -13,6 +13,6 @@ var getConfig = () => {
 		//
 	}
 	return settings;
-}
+};
 
 module.exports = getConfig;

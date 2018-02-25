@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = sequelize => {
 	const user = sequelize.define('user', {
 		user_id: {
 			type: Sequelize.INTEGER,
@@ -10,45 +10,45 @@ module.exports = (sequelize) => {
 		},
 		username: {
 			type: Sequelize.STRING,
-			field: 'username',
+			field: 'username'
 		},
 		password: {
 			type: Sequelize.STRING,
-			field: 'password',
+			field: 'password'
 		},
 		first_name: {
 			type: Sequelize.STRING,
-			field: 'first_name',
+			field: 'first_name'
 		},
 		last_name: {
 			type: Sequelize.STRING,
-			field: 'last_name',
+			field: 'last_name'
 		},
 		status: {
 			type: Sequelize.INTEGER,
-			field: 'status',
+			field: 'status'
 		},
 		deleted: {
 			type: Sequelize.BOOLEAN,
-			field: 'deleted',
+			field: 'deleted'
 		},
 		created_at: {
 			type: Sequelize.DATE,
 			field: 'created_at',
-			defaultValue: Sequelize.NOW,
+			defaultValue: Sequelize.NOW
 		},
 		updated_at: {
 			type: Sequelize.DATE,
 			field: 'updated_at',
-			defaultValue: Sequelize.NOW,
-		},
+			defaultValue: Sequelize.NOW
+		}
 	});
 
-	user.associate = (models) => {
+	user.associate = models => {
 		user.belongsTo(models.user, {
-			foreignKey: 'created_by',
-		})
-	}
+			foreignKey: 'created_by'
+		});
+	};
 
 	return user;
-}
+};

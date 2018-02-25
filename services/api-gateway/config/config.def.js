@@ -1,12 +1,12 @@
-'use strict'
+'use strict';
 
 var config = {
-	jwtSecret: "s3cr3t",
+	jwtSecret: 's3cr3t',
 	jwtSession: {
 		session: false
 	},
-	jwtExpirePeriod: 60,
-}
+	jwtExpirePeriod: 60
+};
 
 const getConfig = () => {
 	try {
@@ -16,6 +16,6 @@ const getConfig = () => {
 		//
 	}
 	return config;
-}
+};
 
 module.exports = { getConfig };

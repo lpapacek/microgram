@@ -1,16 +1,15 @@
-var express = require('express');
-var helmet = require('helmet');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-require('rootpath')();
-const log = require('helpers/logger');
-const responseHandler = require('core/middleware/responseHandler');
-const errorHandler = require('core/middleware/errorHandler');
-const serviceChecker = require('core/registry/checker');
-const auth = require('core/security/auth');
-const index = require('routes/index');
+const log = require('./helpers/logger');
+const responseHandler = require('./core/middleware/responseHandler');
+const errorHandler = require('./core/middleware/errorHandler');
+const serviceChecker = require('./core/registry/checker');
+const auth = require('./core/security/auth');
+const index = require('./routes/index');
 
 var app = express();
 
@@ -27,21 +26,21 @@ log.info('Starting API Gateway...');
 
 //sequelizeStarter.init()
 Promise.resolve()
-.then(() => {
-  log.info('API Gateway running!');
-  initRouteChain();
- // serviceChecker.start();
-})
-.catch((err) => {
-	console.log(err);
-})
+	.then(() => {
+		log.info('API Gateway running!');
+		initRouteChain();
+		// serviceChecker.start();
+	})
+	.catch(err => {
+		console.log(err);
+	});
 
 const initRouteChain = () => {
-  app.use('/', index);
-  
-  app.use(responseHandler.handleResponse);
-  app.use(errorHandler.handleNotFoundError);
-  app.use(errorHandler.handleError);
-}
+	app.use('/', index);
+
+	app.use(responseHandler.handleResponse);
+	app.use(errorHandler.handleNotFoundError);
+	app.use(errorHandler.handleError);
+};
 
 module.exports = app;
